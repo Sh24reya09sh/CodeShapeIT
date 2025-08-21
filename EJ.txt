@@ -1,0 +1,560 @@
+Pract05:
+a.Create a simple web page with various server controls to Demonstrate setting and use of their properties. (Example :AutoPostBack)
+web page;
+AutoPostBack.aspx:
+<%@ Page Language="C#" AutoEventWireup="true"
+         CodeBehind="AutoPostBack.aspx.cs"
+         Inherits="pract5amain.AutoPostBack" %>
+<!DOCTYPE html>
+<html>
+<head id="Head1" runat="server">
+    <title>AutoPostBack Demo</title>
+</head>
+<body>
+<form id="form1" runat="server">
+    <div>
+        <h3>Registration Form</h3>
+        Name:
+        <asp:TextBox ID="TextBox1" runat="server" AutoPostBack="true"
+            OnTextChanged="TextButton1_TextChanged" />
+        <asp:Label ID="Label1" runat="server" Text="[Label1]" />
+        <br /><br />
+        Course Name:
+        <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="true"
+            OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged">
+            <asp:ListItem>FYBSCIT</asp:ListItem>
+            <asp:ListItem>SYBSCIT</asp:ListItem>
+            <asp:ListItem Selected="True">TYBSCIT</asp:ListItem>
+        </asp:DropDownList>
+        <asp:Label ID="Label5" runat="server" Text="[Label5]" />
+        <br /><br />
+        Subject:<br />
+        <asp:CheckBox ID="CheckBox1" runat="server" Text="Java" AutoPostBack="true" />
+        <asp:CheckBox ID="CheckBox2" runat="server" Text="Python" AutoPostBack="true" />
+        <asp:CheckBox ID="CheckBox3" runat="server" Text="SPM" AutoPostBack="true" />
+        <asp:CheckBox ID="CheckBox4" runat="server" Text="C" AutoPostBack="true" />
+        <asp:CheckBox ID="CheckBox5" runat="server" Text="C++" AutoPostBack="true" />
+        <br /><br />
+        Language:
+        <asp:CheckBox ID="cbMarathi" runat="server" Text="Marathi" AutoPostBack="true" />
+        <asp:CheckBox ID="cbEnglish" runat="server" Text="English" AutoPostBack="true" />
+        <br /><br />
+        Gender:
+        <asp:RadioButtonList ID="RadioButtonList1" runat="server" AutoPostBack="true"
+            OnSelectedIndexChanged="RadioButtonList1_SelectedIndexChanged">
+            <asp:ListItem>Male</asp:ListItem>
+            <asp:ListItem>Female</asp:ListItem>
+        </asp:RadioButtonList>
+        <asp:Label ID="Label6" runat="server" Text="[Label6]" />
+        <br /><br />
+        <asp:Button ID="Button1" runat="server" Text="Submit" OnClick="Button1_Click" />
+        <asp:Button ID="Button2" runat="server" Text="Clear" OnClick="Button2_Clear" CausesValidation="false" />
+        <br /><br />
+        <asp:Label ID="Label7" runat="server" Text="[Label7]" />
+    </div>
+</form>
+</body>
+</html>
+AutoPostBack.aspx.cs:
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace pract5amain
+{
+    public partial class AutoPostBack : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            // Runs on every request. Use this to set defaults ONLY once:
+            if (!IsPostBack)
+            {
+                Label5.Text = DropDownList1.SelectedValue; // show default course once
+            }
+        }
+
+        // TextBox AutoPostBack event
+        protected void TextButton1_TextChanged(object sender, EventArgs e)
+        {
+            Label1.Text = TextBox1.Text;
+        }
+
+        // DropDownList AutoPostBack event
+        protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Label5.Text = DropDownList1.SelectedValue;
+        }
+
+        // RadioButtonList AutoPostBack event
+        protected void RadioButtonList1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Label6.Text = RadioButtonList1.SelectedValue;
+        }
+
+        // Submit
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            Label7.Text = "Submitted successfully!!!";
+        }
+
+        // Clear
+        protected void Button2_Clear(object sender, EventArgs e)
+        {
+            TextBox1.Text = string.Empty;
+            DropDownList1.SelectedIndex = 0;
+            CheckBox1.Checked = CheckBox2.Checked =
+            CheckBox3.Checked = CheckBox4.Checked = CheckBox5.Checked = false;
+            cbMarathi.Checked = cbEnglish.Checked = false;
+            RadioButtonList1.ClearSelection();
+
+            Label1.Text = Label5.Text = Label6.Text = Label7.Text = string.Empty;
+        }
+    }
+}
+
+b.Demonstrate the use of Calendar control to perform
+ following operations.
+ i) Display messages in a calendar control
+ ii) Display vacation in a calendar control
+ iii) Selected day in a calendar control using style
+ iv) Difference between two calendar dates
+webform1.aspx:
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Form1.aspx.cs" Inherits="pract5b.form1" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Calendar Control Demo</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        h2 { color: #0a3a9e; }
+        .labels { margin-top: 10px; display: block; font-size: 14px; color: #222; }
+        .btn { padding: 6px 12px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .submit { background: #0a3a9e; color: white; }
+        .reset { background: #ccc; }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+
+        <asp:Calendar ID="Calendar1" runat="server" 
+            OnSelectionChanged="Calendar1_SelectionChanged"
+            OnDayRender="Calender1_DayRender">
+        </asp:Calendar>
+        <br />
+
+        <asp:Button ID="Button2" runat="server" Text="Submit" 
+            CssClass="btn submit" OnClick="Button2_Click" />
+        <asp:Button ID="ButtonReset" runat="server" Text="Reset" 
+            CssClass="btn reset" OnClick="ButtonReset_Click" />
+        <br /><br />
+
+        <asp:Label ID="Label1" runat="server" CssClass="labels" />
+        <asp:Label ID="Label2" runat="server" CssClass="labels" />
+        <asp:Label ID="Label3" runat="server" CssClass="labels" />
+        <asp:Label ID="Label4" runat="server" CssClass="labels" />
+        <asp:Label ID="Label5" runat="server" CssClass="labels" />
+    </form>
+</body>
+</html>
+webform1.aspx.cs:
+using System;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace pract5b
+{
+    public partial class form1 : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                Calendar1.SelectedDate = DateTime.Today;
+            }
+        }
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            Calendar1.Caption = "Shubham Dawal";
+            Calendar1.FirstDayOfWeek = FirstDayOfWeek.Sunday;
+            Calendar1.NextPrevFormat = NextPrevFormat.FullMonth;
+            Calendar1.TitleFormat = TitleFormat.Month;
+            Label2.Text = "Today's Date: " + Calendar1.SelectedDate.ToShortDateString();
+            Label3.Text = "Diwali Vacation Start: 23-10-2025";
+            DateTime diwali = new DateTime(2025, 10, 23);
+            int daysToDiwali = (diwali - Calendar1.SelectedDate).Days;
+            if (daysToDiwali >= 0)
+                Label4.Text = "Days Remaining For Diwali Vacation: " + daysToDiwali;
+            else
+                Label4.Text = "Diwali Vacation already started/ended";
+            DateTime newYear = new DateTime(2025, 12, 31);
+            int daysToNewYear = (newYear - Calendar1.SelectedDate).Days;
+            if (daysToNewYear >= 0)
+                Label5.Text = "Days Remaining for New Year: " + daysToNewYear;
+            else
+                Label5.Text = "Happy New Year!";
+            if (Calendar1.SelectedDate == new DateTime(2025, 10, 23))
+                Label3.Text = "<b>Diwali Festival Start</b>";
+            if (Calendar1.SelectedDate == new DateTime(2025, 10, 28))
+                Label3.Text = "<b>Diwali Festival Ends</b>";
+        }
+        protected void Calender1_DayRender(object sender, DayRenderEventArgs e)
+        {
+            if (e.Day.Date.Day == 5 && e.Day.Date.Month == 9)
+            {
+                e.Cell.BackColor = System.Drawing.Color.Yellow;
+                Label lbl = new Label();
+                lbl.Text = "<br>Teachers Day!";
+                e.Cell.Controls.Add(lbl);
+
+                Image g1 = new Image();
+                g1.ImageUrl = "tg.jpg";   // place an image in project folder
+                g1.Height = 20;
+                g1.Width = 20;
+                e.Cell.Controls.Add(g1);
+            }
+            if (e.Day.Date == new DateTime(2025, 10, 23))
+            {
+                Calendar1.SelectedDate = new DateTime(2025, 10, 23);
+                Calendar1.SelectedDates.SelectRange(Calendar1.SelectedDate,
+                    Calendar1.SelectedDate.AddDays(5));
+
+                Label lbl1 = new Label();
+                lbl1.Text = "<br>Diwali";
+                e.Cell.Controls.Add(lbl1);
+            }
+        }
+        protected void Calendar1_SelectionChanged(object sender, EventArgs e)
+        {
+            Label1.Text = "Your selected Date: " + Calendar1.SelectedDate.ToShortDateString();
+        }
+        protected void ButtonReset_Click(object sender, EventArgs e)
+        {
+            Calendar1.SelectedDate = DateTime.Today;
+            Label1.Text = "";
+            Label2.Text = "";
+            Label3.Text = "";
+            Label4.Text = "";
+            Label5.Text = "";
+        }
+    }
+}
+
+prac06b
+b. Create Web Form to demonstrate use of Adrotator Control.
+webform1.aspx:
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="Pract6B.WebForm1" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+    
+    </div>
+        <asp:AdRotator ID="AdRotator1" runat="server" DataSourceID="XmlDataSource1" />
+        <asp:XmlDataSource ID="XmlDataSource1" runat="server" DataFile="~/XMLFile1.xml"></asp:XmlDataSource>
+    </form>
+</body>
+</html>
+xmlfile1.xml:
+add five images
+<Advertisements>
+  <Ad>
+    <ImageUrl>amazon.jpg</ImageUrl>
+    <NavigateUrl>https://www.amazon.in</NavigateUrl>
+    <ALternateText>Order Mobile Online</ALternateText>
+    <Impression>5</Impression>
+    <Keyword>Amazon</Keyword>
+  </Ad>
+ 
+  <Ad>
+    <ImageUrl>avengers.jpg</ImageUrl>
+    <NavigateUrl>https://www.marvel.com/movies</NavigateUrl>
+    <ALternateText>MarvelMovies</ALternateText>
+    <Impression>5</Impression>
+    <Keyword>Avengers</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageUrl>flipkart.jpg</ImageUrl>
+    <NavigateUrl>https://www.flipkart.com/</NavigateUrl>
+    <ALternateText>Online shopping</ALternateText>
+    <Impression>5</Impression>
+    <Keyword>Flipkart</Keyword>
+  </Ad>
+ 
+  <Ad>
+    <ImageUrl>gjc.jpg</ImageUrl>
+    <NavigateUrl>https://gjcrtn.ac.in/</NavigateUrl>
+    <ALternateText>College</ALternateText>
+    <Impression>5</Impression>
+    <Keyword>GJC</Keyword>
+  </Ad>
+ 
+  `<Ad>
+    <ImageUrl>india.jpg</ImageUrl>
+    <NavigateUrl>https://www.icc-cricket.com/</NavigateUrl>
+    <ALternateText>Criket</ALternateText>
+    <Impression>5</Impression>
+    <Keyword>ICC</Keyword>
+  </Ad>
+</Advertisements>
+
+pract03:
+Working with Windows Forms and Controls - 1
+namespace Praactical03
+{
+    public partial class StudentInfo : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            // Runs every time the page loads
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            // On Submit button click
+            Submit.Text = "Registered Successfully!!";
+        }
+    }
+}
+
+pract06
+a.Create a Registration form to demonstrate use of various
+ Validation controls
+student.aspx
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="student.aspx.cs" Inherits="Pract06A.student" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Registration Form</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="form-container">
+            <h2>Registration Form</h2>
+
+            <!-- First Name -->
+            <div class="field">
+                <asp:Label ID="Label1" runat="server" Text="First Name:"></asp:Label>
+                <asp:TextBox ID="TxtFname" runat="server"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" 
+                    ControlToValidate="TxtFname" ErrorMessage="Please! Enter your First Name" CssClass="error" ForeColor="Red"></asp:RequiredFieldValidator>
+            </div>
+
+            <!-- Last Name -->
+            <div class="field">
+                <br />
+                <asp:Label ID="Label2" runat="server" Text="Last Name:"></asp:Label>
+                <asp:TextBox ID="TxtLname" runat="server"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" 
+                    ControlToValidate="TxtLname" ErrorMessage="Please! Enter your Last Name" CssClass="error" ForeColor="Red"></asp:RequiredFieldValidator>
+            </div>
+
+            <!-- Age -->
+            <div class="field">
+                <br />
+                <asp:Label ID="Label3" runat="server" Text="Age:"></asp:Label>
+                <asp:TextBox ID="TxtAge" runat="server"></asp:TextBox>
+                <asp:RangeValidator ID="RangeValidator1" runat="server" ControlToValidate="TxtAge"
+                    MinimumValue="18" MaximumValue="100" Type="Integer" ErrorMessage="Enter Age above 18" CssClass="error" ForeColor="Red"></asp:RangeValidator>
+            </div>
+
+            <!-- Income -->
+            <div class="field">
+                <br />
+                <asp:Label ID="Label4" runat="server" Text="Income:"></asp:Label>
+                <asp:TextBox ID="TxtIncome" runat="server"></asp:TextBox>
+                <asp:RangeValidator ID="RangeValidator2" runat="server" ControlToValidate="TxtIncome"
+                    MinimumValue="50000" MaximumValue="10000000" Type="Integer" ErrorMessage="Enter income above 50000" CssClass="error" ForeColor="Red"></asp:RangeValidator>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="field">
+                <br />
+                <asp:Label ID="Label5" runat="server" Text="Phone Number:"></asp:Label>
+                <asp:TextBox ID="TxtPhone" runat="server"></asp:TextBox>
+                <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" 
+                    ControlToValidate="TxtPhone" ValidationExpression="^[0-9]{10}$" 
+                    ErrorMessage="Invalid Phone number" CssClass="error" ForeColor="Red"></asp:RegularExpressionValidator>
+            </div>
+
+            <!-- Email -->
+            <div class="field">
+                <br />
+                <asp:Label ID="Label6" runat="server" Text="Email:"></asp:Label>
+                <asp:TextBox ID="TxtEmail" runat="server"></asp:TextBox>
+                <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" 
+                    ControlToValidate="TxtEmail" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" 
+                    ErrorMessage="Invalid Email" CssClass="error" ForeColor="Red"></asp:RegularExpressionValidator>
+            </div>
+
+            <!-- Username -->
+            <div class="field">
+                <br />
+                <asp:Label ID="Label7" runat="server" Text="UserName:"></asp:Label>
+                <asp:TextBox ID="TxtUname" runat="server"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" 
+                    ControlToValidate="TxtUname" ErrorMessage="Enter Username" CssClass="error" ForeColor="Red"></asp:RequiredFieldValidator>
+            </div>
+
+            <!-- Password -->
+            <div class="field">
+                <br />
+                <asp:Label ID="Label8" runat="server" Text="Password:"></asp:Label>
+                <asp:TextBox ID="TxtPass" runat="server" TextMode="Password"></asp:TextBox>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="field">
+                <br />
+                <asp:Label ID="Label9" runat="server" Text="Confirm Password:"></asp:Label>
+                <asp:TextBox ID="TxtCpass" runat="server" TextMode="Password"></asp:TextBox>
+                <asp:CompareValidator ID="CompareValidator1" runat="server" 
+                    ControlToCompare="TxtPass" ControlToValidate="TxtCpass" 
+                    ErrorMessage="Invalid Password" CssClass="error" ForeColor="Red"></asp:CompareValidator>
+            </div>
+
+            <!-- Buttons -->
+            <div class="btn-container">
+                <br />
+&nbsp;<asp:Button ID="BReg" runat="server" Text="Register" OnClick="BReg_Click" />
+                &nbsp;&nbsp;&nbsp;
+                <asp:Button ID="BClear" runat="server" Text="Clear" CausesValidation="false" OnClick="BClear_Click" />
+            </div>
+
+            <!-- Status -->
+            <div style="text-align:center; margin-top:10px;">
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+
+student.aspx.cs
+using System;
+using System.Web.UI;
+
+namespace Pract06A
+{
+    public partial class student : Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            // Page load logic (if needed)
+        }
+
+        protected void BReg_Click(object sender, EventArgs e)
+        {
+            // Registration logic (displaying entered details)
+            string fname = TxtFname.Text;
+            string lname = TxtLname.Text;
+            string age = TxtAge.Text;
+            string income = TxtIncome.Text;
+            string phone = TxtPhone.Text;
+            string email = TxtEmail.Text;
+            string uname = TxtUname.Text;
+
+            Label11.Text = "✅ Registration Successful!<br/>" +
+                           "Name: " + fname + " " + lname + "<br/>" +
+                           "Age: " + age + "<br/>" +
+                           "Income: " + income + "<br/>" +
+                           "Phone: " + phone + "<br/>" +
+                           "Email: " + email + "<br/>" +
+                           "Username: " + uname;
+        }
+
+        protected void BClear_Click(object sender, EventArgs e)
+        {
+            // Clear all inputs
+            TxtFname.Text = "";
+            TxtLname.Text = "";
+            TxtAge.Text = "";
+            TxtIncome.Text = "";
+            TxtPhone.Text = "";
+            TxtEmail.Text = "";
+            TxtUname.Text = "";
+            TxtPass.Text = "";
+            TxtCpass.Text = "";
+            Label11.Text = "Form Cleared!";
+        }
+    }
+}
+
+pract06b
+b. Create Web Form to demonstrate use of Adrotator Control.
+webform.aspx
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="Pract6B.WebForm1" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+    
+    </div>
+        <asp:AdRotator ID="AdRotator1" runat="server" DataSourceID="XmlDataSource1" />
+        <asp:XmlDataSource ID="XmlDataSource1" runat="server" DataFile="~/XMLFile1.xml"></asp:XmlDataSource>
+    </form>
+</body>
+</html>
+xmlfile1.xml
+<Advertisements>
+  <Ad>
+    <ImageUrl>amazon.jpg</ImageUrl>
+    <NavigateUrl>https://www.amazon.in</NavigateUrl>
+    <ALternateText>Order Mobile Online</ALternateText>
+    <Impression>5</Impression>
+    <Keyword>Amazon</Keyword>
+  </Ad>
+ 
+  <Ad>
+    <ImageUrl>avengers.jpg</ImageUrl>
+    <NavigateUrl>https://www.marvel.com/movies</NavigateUrl>
+    <ALternateText>MarvelMovies</ALternateText>
+    <Impression>5</Impression>
+    <Keyword>Avengers</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageUrl>flipkart.jpg</ImageUrl>
+    <NavigateUrl>https://www.flipkart.com/</NavigateUrl>
+    <ALternateText>Online shopping</ALternateText>
+    <Impression>5</Impression>
+    <Keyword>Flipkart</Keyword>
+  </Ad>
+ 
+  <Ad>
+    <ImageUrl>gjc.jpg</ImageUrl>
+    <NavigateUrl>https://gjcrtn.ac.in/</NavigateUrl>
+    <ALternateText>College</ALternateText>
+    <Impression>5</Impression>
+    <Keyword>GJC</Keyword>
+  </Ad>
+ 
+  `<Ad>
+    <ImageUrl>india.jpg</ImageUrl>
+    <NavigateUrl>https://www.icc-cricket.com/</NavigateUrl>
+    <ALternateText>Criket</ALternateText>
+    <Impression>5</Impression>
+    <Keyword>ICC</Keyword>
+  </Ad>
+</Advertisements>
+
+
+
+	
+
